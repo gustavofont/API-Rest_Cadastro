@@ -27,7 +27,7 @@ class UserController{
             return
         }
         var result = await User.findEmail(email)
-        if(result > 0){
+        if(result.length > 0){
             res.status(400)
             res.json({err : "email já está cadastrado"})
             return

@@ -8,7 +8,7 @@ router.get('/', HomeController.index);
 
 router.post('/user', UserController.create)
 
-router.get('/users', UserController.index)
+router.get('/user', UserController.index)
 
 router.get('/user/:id', UserController.findUser)
 

@@ -31,6 +31,7 @@ class User{
     async findEmail(email){
         try{
             var emailfinded = await knex.select("*").from("Usuarios").where({email: email})
+            return emailfinded
         }catch(err){
             console.log(err)
             return false
