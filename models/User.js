@@ -4,7 +4,7 @@ var bcrypt = require("bcrypt")
 class User{
     async findAll(){
         try{
-            var result = await knex.select("*").from("Usuarios")
+            let result = await knex.select("*").from("Usuarios")
             return result
         }catch(err){
             console.log(err)
@@ -35,6 +35,48 @@ class User{
         }catch(err){
             console.log(err)
             return false
+        }
+    }
+    async delete(id){
+        let exist = await this.findUser(id)
+        if(exist.length > 0){
+            try{
+                await knex.delete().where({id:id}).table("Usuarios")
+            }catch(err){
+                console.log(err)
+                return {status : false, err : err}
+            }
+            return {status : true}
+        }else{
+            return {status : false , err: "Usuario inexistente no Banco"} 
+        }
+    }
+    async update(id,name,email,role){
+        let user = await this.findUser(id)
+
+        if(user.length > 0){
+            let editUser = {}
+            if (email != undefined){
+                if(email != user.email){
+                    let result = await this.findEmail(email)
+                    if(result.length == []){
+                        editUser.email = email
+                    }else{
+                        return {status : false, err : "O email já está cadastrado"}
+                    }
+                }
+            }
+            editUser.name = name
+            editUser.role = role 
+
+            try{
+                await knex.update(editUser).where({id : id}).table("Usuarios")
+            }catch(err){
+                return {status : false , err : err}
+            }
+            return {status : true}
+        }else{
+            return {status : false, err : "Usuário não existe"}
         }
     }
 }
